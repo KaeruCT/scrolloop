@@ -1,5 +1,5 @@
 /* jquery.scrolloop.js -- looping jQuery scrolloop
-  version 1.2.2, October 3rd, 2004
+  version 0.9, May 10, 2012
 
   Copyright (C) 2012 KaeruCT
 
