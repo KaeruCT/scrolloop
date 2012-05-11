@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Scrolloop: jQuery looping scroller</title>
+<link rel="stylesheet" href="style.css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.scrolloop.js"></script>
+<script type="text/javascript">
+
+    // not $(document).load() since you need the images to load to know their dimensions
+    $(window).load(function () {
+        // 10 is the scrolling speed
+        $("#image-list").scrolloop(10);
+    });
+</script>
+<style type="text/css">
+
+</style>
+</head>
+<body>
+    <h1>Scrolloop: jQuery looping scroller</h1>
+    <ul id="image-list">
+        <li><img src="image1.png"></li>
+        <li><img src="image2.png"></li>
+        <li><img src="image3.png"></li>
+        <li><img src="image1.png"></li>
+        <li><img src="image2.png"></li>
+        <li><img src="image3.png"></li>
+    </ul>
+    <h2>Hover over the images to scroll them!</h2>
+    <p>
+        <strong>Usage:</strong> simply put image tags (or anything) in an unordered list.
+        For best results, the unordered list should have a fixed width.
+    </p>
+    <p>See the page source code for more info.</p>
+    </p>
+</body>
+</html>
