@@ -1,5 +1,5 @@
-/* jquery.scrolloop.js -- looping jQuery scrolloop
-  version 0.9, May 10, 2012
+/* jquery.scrolloop.js -- looping jQuery scroller
+  version 1.0, May 27, 2012
 
   Copyright (C) 2012 KaeruCT
 
@@ -22,11 +22,10 @@
   KaeruCT keroct@gmail.com
 
 */
-
-var jQuery;
+/*global jQuery */
 (function ($) {
     var methods = {
-        init: function (speed) {
+        'init': function (speed) {
 
             return this.each(function () {
 
@@ -46,15 +45,18 @@ var jQuery;
                         d: 0,
                         interval: null,
                         timeout: null,
-                        multiplier: speed || 10
+                        stopping: false,
+                        multiplier: speed || 7
                     });
                     data = $this.data("scrolloop");
                 }
 
-                $(this).css({
+                $this.css({
                     'overflow': "hidden",
                     'position': "relative"
-                }).find("li").each(function () {
+                }).show();
+
+                img.each(function () {
                     $(this).css({
                         'position': "absolute",
                         'top': "50%",
@@ -80,53 +82,33 @@ var jQuery;
                     });
                 }
 
-                $(this).height(maxheight);
+                $this.height(maxheight).hide();
 
+                // binding events
                 $this.mousemove(function (e) {
-                    // set movement speed depending on mouse position relative to the scrolloop
-                    var w = $this.outerWidth(),
-                        d = (e.pageX - ($this.offset().left + w / 2)) * 2 / w;
-
-                    data.d = d;
-
-                }).mouseenter(function () {
-
-                    // clear movement interval and timeout
-                    if (data.interval) {
-                        clearInterval(data.interval);
-                        data.interval = null;
-                        clearTimeout(data.timeout);
-                        data.timeout = null;
-                    }
-
-                    // move
-                    data.interval = setInterval(function () {
-                        methods.scroll.apply($this);
-                    }, 50);
-
-                }).mouseleave(function () {
-                    // speed down
-                    data.d /= 2;
-
-                    // and set timeout to stop movement
-                    data.timeout = setTimeout(function () {
-                        if (data.interval) {
-                            clearInterval(data.interval);
-                            data.interval = null;
-                        }
-                    }, 300);
+                    methods.move.apply(this, [e]);
+                }).mouseenter(function (e) {
+                    methods.startscroll.apply(this, [e]);
+                }).mouseleave(function (e) {
+                    methods.endscroll.apply(this, [e]);
                 });
             });
         },
 
         // scrolls all the images
-        scroll: function () {
-
+        'scroll': function () {
             var data = $(this).data("scrolloop"),
                 i,
                 n,
                 totalwidth,
-                speed = -data.d * data.multiplier;
+                speed = -data.d;
+
+            speed *= data.multiplier;
+
+            if (data.stopping) {
+                // speed down
+                data.d /= 1.1;
+            }
 
             if (speed < 0) {
 
@@ -167,6 +149,56 @@ var jQuery;
             }
 
             return $(this);
+        },
+
+        // function to execute on mousemove
+        'move': function (e) {
+            var $this = $(this),
+                w,
+                data = $this.data("scrolloop");
+
+            // speed is distance between cursor and center of element
+            w = $this.outerWidth();
+            data.d = (e.pageX - ($this.offset().left + w / 2)) * 2 / w;
+        },
+
+        // begin scrolling
+        'startscroll': function (e) {
+            var $this = $(this),
+                data = $this.data("scrolloop");
+
+            // clear movement interval and timeout
+            if (data.interval !== null) {
+                clearInterval(data.interval);
+                data.interval = null;
+                clearTimeout(data.timeout);
+                data.timeout = null;
+            }
+
+            data.stopping = false;
+            data.fevent = e;
+
+            // move
+            data.interval = setInterval(function () {
+                methods.scroll.apply($this);
+            }, 50);
+        },
+
+        // stop scrolling
+        'endscroll': function () {
+            var $this = $(this),
+                data = $this.data("scrolloop");
+
+            data.stopping = true;
+
+            // and set timeout to stop movement
+            data.timeout = setTimeout(function () {
+                if (data.interval !== null) {
+                    clearInterval(data.interval);
+                    data.interval = null;
+                }
+                data.stopping = false;
+            }, 500);
         }
     };
 

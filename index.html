@@ -6,11 +6,25 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="jquery.scrolloop.js"></script>
 <script type="text/javascript">
+    /*
+        NOTE: the really important code for this part is:
+            $("#image-list").scrolloop(10);
+
+        All the other code is just to set it up so it doesn't look ugly as the plugin initializes.
+    */
+
+    $(function () {
+        // hiding the image list so it won't look awkward when it resizes as the images load
+        $("#image-list").hide();
+    });
 
     // not $(document).load() since you need the images to load to know their dimensions
     $(window).load(function () {
         // 10 is the scrolling speed
-        $("#image-list").scrolloop(10);
+        $("#image-list").scrolloop(10).
+
+        // show image list since we're all set
+        slideDown(500);
     });
 </script>
 <style type="text/css">
