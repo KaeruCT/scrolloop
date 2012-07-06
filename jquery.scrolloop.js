@@ -101,7 +101,23 @@
                 i,
                 n,
                 totalwidth,
-                speed = -data.d;
+                speed = -data.d,
+
+                toggle_offscreen = function (i) {
+                    // hide the image if it's not visible, show otherwise
+                    // safari mac has a weird webkit bug that makes this necessary
+
+                    var img = $(data.img[i]);
+
+                    if (data.arrleft[i] < -img.outerWidth() ||
+                            data.arrleft[i] > $(this).outerWidth() + img.outerWidth()) {
+
+                        img.hide();
+                    } else {
+
+                        img.show();
+                    }
+                };
 
             speed *= data.multiplier;
 
@@ -128,6 +144,7 @@
                         data.pos[i] = totalwidth + data.pos[i] + $(data.img[i]).outerWidth();
                     }
                     $(data.img[i]).css("left", data.pos[i]);
+                    toggle_offscreen(i);
                 }
             } else {
 
@@ -145,6 +162,7 @@
                         data.pos[i] -= totalwidth;
                     }
                     $(data.img[i]).css("left", data.pos[i]);
+                    toggle_offscreen(i);
                 }
             }
 
