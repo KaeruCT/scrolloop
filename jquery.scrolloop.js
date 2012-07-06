@@ -109,8 +109,8 @@
 
                     var img = $(data.img[i]);
 
-                    if (data.arrleft[i] < -img.outerWidth() ||
-                            data.arrleft[i] > $(this).outerWidth() + img.outerWidth()) {
+                    if (data.pos[i] < -img.outerWidth() ||
+                            data.pos[i] > $(this).outerWidth() + img.outerWidth()) {
 
                         img.hide();
                     } else {
